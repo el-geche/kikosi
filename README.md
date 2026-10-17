@@ -1,6 +1,6 @@
 # Pitchlens: football analysis (informational)
 
-Pitchlens is an independent football statistics site for the Premier League, La Liga, Bundesliga and Serie A. It shows form guides, head-to-head records, home/away splits, side-by-side team histories and transparent **model** probabilities.
+Pitchlens is an independent football statistics site for the Premier League, La Liga, Bundesliga, Serie A and Ligue 1. It shows form guides, head-to-head records, home/away splits, side-by-side team histories and transparent **model** probabilities.
 
 > 18+ · Informational analysis only. No predictions or guarantees, no betting, accounts or payments. "Fair odds" are model estimates (1 ÷ probability), **not bookmaker odds**. Kenya help: [GRA self-exclusion](https://gra.go.ke/self-exclusion-process/), toll-free 0800 723 770.
 
@@ -12,8 +12,8 @@ Pitchlens is an independent football statistics site for the Premier League, La 
 - Dark/light theme, responsive layout, subtle animations
 
 ## Data
-- **openfootball/football.json** (keyless, public domain), 2026/27 plus 2025/26 for priors and H2H. Fetched server-side with ISR (`revalidate = 3600`).
-- Optional: set `FOOTBALL_DATA_API_KEY` (football-data.org v4) to use it as the primary source. The site falls back to openfootball if the key is missing or the request fails.
+- **Primary: football-data.org v4** (PL, PD, BL1, SA, FL1) for current 2026/27 fixtures and results. Needs `FOOTBALL_DATA_API_KEY`, which is set as a Vercel env var and never committed. One call per league, cached with ISR (`revalidate = 1800`), so at most 5 calls per 30 min, under the free tier's 10 requests/minute. Kick-off times are converted to EAT (UTC+3).
+- **openfootball/football.json** (keyless) for the 2025/26 season (model priors and H2H, with team names aligned to football-data), and as a full fallback if the API fails or no key is set.
 
 ## Model
 Home and away attack/defence strengths are shrunk toward last season (or a promoted-team prior), with a small last-5 form adjustment. They feed Poisson goals, which give 1X2, O/U 2.5, BTTS and the most likely score. See `lib/model.js`.
@@ -23,5 +23,5 @@ Home and away attack/defence strengths are shrunk toward last season (or a promo
 npm install
 npm run dev                 # http://localhost:3000
 npm run build && npm start  # production
-# optional: FOOTBALL_DATA_API_KEY=xxxx npm run dev
+vercel env pull .env.local   # pulls FOOTBALL_DATA_API_KEY for local use (gitignored)
 ```

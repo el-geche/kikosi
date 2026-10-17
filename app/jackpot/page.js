@@ -1,6 +1,6 @@
 import { getAll } from "../../lib/all";
 import JackpotLab from "../../components/JackpotLab";
-export const revalidate = 3600;
+export const revalidate = 1800;
 export const metadata = { title: "Pick-12 Lab · Pitchlens" };
 export default async function Page() {
   const all = await getAll();
