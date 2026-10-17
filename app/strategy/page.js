@@ -1,4 +1,4 @@
-export const metadata = { title: "Strategy: bankroll & value (educational) · Pitchlens" };
+export const metadata = { title: "Strategy: bankroll & value (educational) · Kikosi" };
 export default function Strategy() {
   return <>
     <div className="hero"><h1>Thinking in <span className="grad">probabilities</span></h1><p>An educational guide to bankroll management, value and the limits of models. Not financial or betting advice.</p></div>
@@ -10,7 +10,7 @@ export default function Strategy() {
       <h3>5. Variance and sample size</h3><p>Early-season tables are noisy. That is why our model shrinks each team’s current numbers toward last season (or toward a promoted-team prior) until more games are played.</p>
       <h3>6. Know when to stop</h3><p>Warning signs include chasing losses, betting to escape stress, hiding it from others, and borrowing to gamble. In Kenya you can request self-exclusion through the <a href="https://gra.go.ke/self-exclusion-process/" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>Gambling Regulatory Authority</a> (toll-free 0800 723 770).</p>
     </article>
-    <aside className="card sticky prose" style={{ alignSelf: "start" }}><h3 style={{ marginTop: 0 }}>How the Pitchlens model works</h3><ul>
+    <aside className="card sticky prose" style={{ alignSelf: "start" }}><h3 style={{ marginTop: 0 }}>How the Kikosi model works</h3><ul>
       <li>Home and away attack and defence strengths for every team, from goals scored and conceded at each venue.</li>
       <li>Shrinkage: each team’s rates are blended with 5 games’ worth of last-season data (promoted teams get a weaker prior).</li>
       <li>A small (±8% max) adjustment for points per game over the last 5.</li>

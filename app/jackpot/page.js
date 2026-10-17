@@ -1,7 +1,7 @@
 import { getAll } from "../../lib/all";
 import JackpotLab from "../../components/JackpotLab";
 export const revalidate = 1800;
-export const metadata = { title: "Pick-12 Lab · Pitchlens" };
+export const metadata = { title: "Pick-12 Lab · Kikosi" };
 export default async function Page() {
   const all = await getAll();
   const matches = all.flatMap((l) => l.upcoming.map((m) => ({ id: m.id, lg: l.league.name, flag: l.league.flag, date: m.date, time: m.time, home: m.home, away: m.away, H: m.H, D: m.D, A: m.A, pick: m.pick, pickProb: m.pickProb, why: m.why, favours: m.favours, homeForm: m.homeForm, awayForm: m.awayForm })))

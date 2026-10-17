@@ -1,6 +1,8 @@
-# Pitchlens: football analysis (informational)
+# Kikosi: football analysis (informational)
 
-Pitchlens is an independent football statistics site for the Premier League, La Liga, Bundesliga, Serie A and Ligue 1. It shows form guides, head-to-head records, home/away splits, side-by-side team histories and transparent **model** probabilities.
+Live: https://kikosi-ke.vercel.app
+
+Kikosi is an independent football statistics site for the Premier League, La Liga, Bundesliga, Serie A and Ligue 1. It shows form guides, head-to-head records, home/away splits, side-by-side team histories and transparent **model** probabilities.
 
 > 18+ · Informational analysis only. No predictions or guarantees, no betting, accounts or payments. "Fair odds" are model estimates (1 ÷ probability), **not bookmaker odds**. Kenya help: [GRA self-exclusion](https://gra.go.ke/self-exclusion-process/), toll-free 0800 723 770.
 

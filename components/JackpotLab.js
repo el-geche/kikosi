@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { pct, fmtDate, Form } from "./ui";
-const KEY = "pitchlens-pick12";
+const KEY = "kikosi-pick12", OLD_KEY = "pitchlens-pick12"; // migrate slips saved before the rename
 const prob = (m, o) => (o === "1" ? m.H : o === "X" ? m.D : m.A);
 export default function JackpotLab({ matches }) {
   const [slip, setSlip] = useState({}); const [ready, setReady] = useState(false); const [view, setView] = useState("build");
-  useEffect(() => { try { setSlip(JSON.parse(localStorage.getItem(KEY)) || {}); } catch {} setReady(true); }, []);
+  useEffect(() => { try { setSlip(JSON.parse(localStorage.getItem(KEY) || localStorage.getItem(OLD_KEY)) || {}); } catch {} setReady(true); }, []);
   useEffect(() => { if (ready) localStorage.setItem(KEY, JSON.stringify(slip)); }, [slip, ready]);
   const byId = useMemo(() => Object.fromEntries(matches.map((m) => [m.id, m])), [matches]);
   const picks = Object.entries(slip).filter(([id]) => byId[id]);

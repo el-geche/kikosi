@@ -5,7 +5,7 @@ import { MatchCard, Form, fmtDate } from "../../components/ui";
 export const revalidate = 1800;
 export const dynamicParams = false;
 export function generateStaticParams() { return LEAGUES.map((l) => ({ league: l.slug })); }
-export async function generateMetadata({ params }) { const l = LEAGUES.find((x) => x.slug === params.league); return { title: `${l?.name} analysis · Pitchlens` }; }
+export async function generateMetadata({ params }) { const l = LEAGUES.find((x) => x.slug === params.league); return { title: `${l?.name} analysis · Kikosi` }; }
 export default async function League({ params }) {
   const d = await getOne(params.league); if (!d) notFound();
   return <>
