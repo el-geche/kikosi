@@ -6,11 +6,11 @@ import NavLinks from "../components/NavLinks";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata = { title: "Pitchlens: football form, stats & model probabilities", description: "Informational football analysis: form guides, head-to-head, home/away splits and model probabilities. No betting. 18+." };
 export const viewport = { width: "device-width", initialScale: 1 };
-const themeScript = `try{var t=localStorage.getItem("pl-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}`;
+const themeScript = `try{var t=localStorage.getItem("pl-theme")||"dark";document.documentElement.dataset.theme=t}catch(e){}`;
 export default function RootLayout({ children }) {
   return <html lang="en" className={inter.variable} suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head><body>
     <div className="rg-bar">18+ · Informational analysis only. No predictions or guarantees, and no betting on this site. Gamble responsibly. Need help? <a href="https://gra.go.ke/self-exclusion-process/" target="_blank" rel="noopener noreferrer">Kenya GRA self-exclusion</a> · toll-free 0800 723 770</div>
-    <header className="nav"><div className="wrap nav-in"><Link href="/" className="brand"><span className="brand-mark">◎</span>Pitch<em>lens</em></Link><NavLinks /><ThemeToggle /></div></header>
+    <header className="nav"><div className="wrap nav-in"><Link href="/" className="brand"><span className="brand-mark">◎</span><span>Pitch<em>lens</em></span></Link><NavLinks /><ThemeToggle /></div></header>
     <main className="wrap">{children}</main>
     <footer><div className="wrap">
       <p><b>Pitchlens</b> is an independent, informational football statistics site. Probabilities and “fair odds” are <b>model estimates, not bookmaker odds</b>. They can be wrong and are not predictions, tips or guarantees. No bets, accounts, deposits or payments exist on this site. 18+ only.</p>

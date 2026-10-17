@@ -50,12 +50,12 @@ export function Markets({ m }) {
   const res = [["1", "Home win", m.H], ["X", "Draw", m.D], ["2", "Away win", m.A]];
   const fav1x2 = res.reduce((a, b) => (b[2] > a[2] ? b : a));
   const u25 = 1 - m.o25, goalsFav = m.o25 >= u25 ? "o25" : "u25";
-  const mk = [...res.map(([k, l, p]) => ({ k, l, p, fav: k === fav1x2[0] })), { k: "o25", l: "Over 2.5", p: m.o25, fav: goalsFav === "o25" }, { k: "u25", l: "Under 2.5", p: u25, fav: goalsFav === "u25" }, { k: "btts", l: "BTTS yes", p: m.btts, fav: false }];
+  const mk = [...res.map(([k, l, p]) => ({ k, l: k, t: l, p, fav: k === fav1x2[0], g: "r" })), { k: "o25", l: "O2.5", t: "Over 2.5 goals", p: m.o25, fav: goalsFav === "o25", g: "g" }, { k: "u25", l: "U2.5", t: "Under 2.5 goals", p: u25, fav: goalsFav === "u25", g: "g" }, { k: "btts", l: "BTTS", t: "Both teams to score", p: m.btts, fav: false, g: "b" }];
   const tot = m.lh + m.la;
   const goalsWhy = `${tot.toFixed(2)} total expected goals; ${m.home} ${m.homeAll.p ? ((m.homeAll.gf + m.homeAll.ga) / m.homeAll.p).toFixed(1) : "–"} and ${m.away} ${m.awayAll.p ? ((m.awayAll.gf + m.awayAll.ga) / m.awayAll.p).toFixed(1) : "–"} total goals per game in their 2026/27 matches`;
   const resLabel = fav1x2[0] === "1" ? `${m.home} win` : fav1x2[0] === "2" ? `${m.away} win` : "Draw";
-  return <div className="mk-wrap">
-    <div className="mk">{mk.map((x) => <div key={x.k} className={`mk-cell${x.fav ? " fav" : ""}`}><span className="mk-l">{x.l}</span><b>{pct(x.p)}</b><span className="mk-o">{fair(x.p)}</span></div>)}</div>
+  return <div className="mk-wrap"><div className="mk-cap"><span>Fair odds · prob.</span><span>Model estimate, not bookmaker odds</span></div>
+    <div className="mk">{mk.map((x) => <div key={x.k} title={`${x.t}: model ${pct(x.p)}, fair odds ${fair(x.p)} (model estimate)`} className={`mk-cell mk-${x.g}${x.fav ? " fav" : ""}`}><span className="mk-l">{x.l}</span><b>{fair(x.p)}</b><span className="mk-o">{pct(x.p)}</span></div>)}</div>
     <div className="read"><span className="tag">Model read</span> History favours <b>{resLabel}</b> and <b>{goalsFav === "o25" ? "Over 2.5" : "Under 2.5"}</b>: {m.favours.reason.replace(/^./, (c) => c.toLowerCase())}; {goalsWhy}.</div>
     <p className="mini" style={{ margin: "6px 0 0" }}>Probability % and fair odds are model estimates, not bookmaker odds. No guarantees.</p>
   </div>;
