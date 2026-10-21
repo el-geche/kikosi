@@ -14,7 +14,7 @@ Kikosi is an independent football statistics site for the Premier League, La Lig
 - Dark/light theme, responsive layout, subtle animations
 
 ## Data
-- **Primary: football-data.org v4** (PL, PD, BL1, SA, FL1) for current 2026/27 fixtures and results. Needs `FOOTBALL_DATA_API_KEY`, which is set as a Vercel env var and never committed. One call per league, cached with ISR (`revalidate = 1800`), so at most 5 calls per 30 min, under the free tier's 10 requests/minute. Kick-off times are converted to EAT (UTC+3).
+- **Primary: football-data.org v4** (PL, PD, BL1, SA, FL1) for current 2026/27 fixtures and results. Needs `FOOTBALL_DATA_API_KEY`, which is set as a Vercel env var and never committed. One call per league, cached in the Next.js data cache for 2 minutes (`REVALIDATE = 120` in `lib/data.js`), so at most ~2.5 calls/min, under the free tier's 10 requests/minute. Pages are rendered per request (`dynamic = "force-dynamic"`) so each fixture is classified as live, upcoming or finished against the current time; finished results feed standings, form and the model. Kick-off times are converted to EAT (UTC+3).
 - **openfootball/football.json** (keyless) for the 2025/26 season (model priors and H2H, with team names aligned to football-data), and as a full fallback if the API fails or no key is set.
 
 ## Model

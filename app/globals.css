@@ -167,3 +167,18 @@ footer a{color:var(--accent-2)}footer b{color:#fff}
 @media(max-width:640px){.hero{padding:18px 14px;border-radius:10px}.nav-in{gap:8px}.brand{font-size:17px}.links a{padding:16px 9px 14px;font-size:11.5px}.grid{grid-template-columns:1fr}}
 .mk-cap span{white-space:nowrap}.mk-cap{flex-wrap:wrap}
 @media(max-width:640px){.nav-in{flex-wrap:wrap;height:auto;padding-top:8px;gap:0}.nav-in .brand{flex:1}.links{order:3;flex:1 0 100%;margin:4px -14px 0;padding:0 6px;border-top:1px solid #222c38}.links a{padding:11px 9px 9px}}
+/* Live / history fixture sections */
+.live-card{border-color:color-mix(in srgb,var(--accent-2) 55%,var(--border))}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e5484d;margin-right:6px;vertical-align:middle;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.score{font-variant-numeric:tabular-nums;font-weight:800;font-size:15px;text-align:center;background:var(--surface-2);padding:4px 10px;border-radius:6px;white-space:nowrap}
+.score.live{color:var(--accent-2);font-size:18px}
+.hist{border-bottom:1px solid var(--border)}.hist:last-child{border:0}
+.hist summary{display:grid;grid-template-columns:86px 1fr auto 1fr;gap:10px;align-items:center;padding:9px 2px;cursor:pointer;list-style:none;font-size:14px}
+.hist summary::-webkit-details-marker{display:none}
+.hist summary:hover{background:var(--surface-2)}
+.hist-d{font-size:12px;font-weight:600;color:var(--muted)}
+.hist-t{font-weight:600}.hist-t.r{text-align:right}.hist-t.win{color:var(--accent)}
+.hist .kv{padding:4px 2px 12px}
+.status-list{margin:10px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted)}.status-list li{padding:3px 0}
+@media (max-width:520px){.hist summary{grid-template-columns:62px 1fr auto 1fr;gap:6px;font-size:13px}}

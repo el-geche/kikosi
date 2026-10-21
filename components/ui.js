@@ -60,3 +60,36 @@ export function Markets({ m }) {
     <p className="mini" style={{ margin: "6px 0 0" }}>Probability % and fair odds are model estimates, not bookmaker odds. No guarantees.</p>
   </div>;
 }
+
+const ST_LABEL = { IN_PLAY: "Live", PAUSED: "Half-time", LIVE: "Live" };
+export function LiveCard({ m, i = 0 }) {
+  const hasScore = m.liveH != null;
+  const label = ST_LABEL[m.status] || "Kicked off";
+  return <article className="card live-card" style={{ animationDelay: `${i * 40}ms` }}>
+    <div className="m-top"><span><span className="live-dot" />{label}{m.status !== "PAUSED" ? ` · ~${Math.min(m.mins, 120)}′` : ""}</span><span>{m.round}</span></div>
+    <div className="teams">
+      <div className="team">{m.home}<Form f={m.homeForm} /></div>
+      <div className="score live">{hasScore ? `${m.liveH}–${m.liveA}` : "v"}</div>
+      <div className="team r">{m.away}<Form f={m.awayForm} /></div>
+    </div>
+    <p className="mini" style={{ margin: 0 }}>Kick-off {fmtDate(m.date)} · {m.time}{m.ht ? ` · HT ${m.ht.h}–${m.ht.a}` : ""}{hasScore ? "" : " · live score not yet in the data feed"}</p>
+  </article>;
+}
+
+const resWord = (r, side) => (r === "X" ? "D" : (r === "1") === (side === "home") ? "W" : "L");
+export function ResultRow({ m }) {
+  return <details className="hist">
+    <summary>
+      <span className="hist-d">{fmtDate(m.date)}<br /><span className="mini">{m.time}</span></span>
+      <span className={`hist-t${m.r === "1" ? " win" : ""}`}>{m.home}</span>
+      <b className="score">{m.hg}–{m.ag}</b>
+      <span className={`hist-t r${m.r === "2" ? " win" : ""}`}>{m.away}</span>
+    </summary>
+    <div className="kv">
+      <div><span>Full time</span><br />{m.home} {m.hg}–{m.ag} {m.away}{m.ht ? ` (HT ${m.ht.h}–${m.ht.a})` : ""}</div>
+      <div><span>Round</span><br />{m.round || "–"}</div>
+      <div><span>{m.home}</span><br />Result: {resWord(m.r, "home")} · now {m.homePos ? `#${m.homePos}` : "–"} · last 5: <Form f={m.homeForm} /></div>
+      <div><span>{m.away}</span><br />Result: {resWord(m.r, "away")} · now {m.awayPos ? `#${m.awayPos}` : "–"} · last 5: <Form f={m.awayForm} /></div>
+    </div>
+  </details>;
+}

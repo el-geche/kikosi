@@ -1,6 +1,6 @@
 import { getAll } from "../../lib/all";
 import JackpotLab from "../../components/JackpotLab";
-export const revalidate = 1800;
+export const dynamic = "force-dynamic"; // judge upcoming vs past at request time; data cached 2 min in lib/data.js
 export const metadata = { title: "Pick-12 Lab · Kikosi" };
 export default async function Page() {
   const all = await getAll();
