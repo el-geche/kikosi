@@ -29,6 +29,7 @@ export async function POST(req) {
     returning id, handle::text as handle, created_at`;
   if (!rows[0]) return json({ error: "That handle is taken. Try another." }, 409);
   await pgStore.recordAttempt("create_ip", ip, true);
+  if (Number.isInteger(body.favTeamId)) { try { const { setFavTeam } = await import("../../../lib/fantasyStore.js"); await setFavTeam(rows[0].id, body.favTeamId); } catch {} }
   const res = json({ member: { handle: rows[0].handle, createdAt: rows[0].created_at }, recoveryCode: code }, 201);
   return setSession(res, rows[0].id);
 }
