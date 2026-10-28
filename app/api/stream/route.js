@@ -6,12 +6,11 @@
 // - each loop also nudges the football-data scheduler (lib/fdScheduler.js), which is budgeted centrally.
 import { bus, eventsAfter, latestEventId } from "../../../lib/events.js";
 import { tick } from "../../../lib/fdScheduler.js";
-import { sseFrame, sseComment, parseCursor } from "../../../lib/live.js";
+import { sseFrame, sseComment, parseCursor, pollDelay } from "../../../lib/live.js";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 const LIFETIME_MS = 270e3, HEARTBEAT_MS = 15e3;
-export const pollDelay = (quietMs) => (quietMs < 30e3 ? 1000 : quietMs < 120e3 ? 3000 : 5000);
 
 export async function GET(req) {
   if (!process.env.DATABASE_URL) return new Response("Realtime not available", { status: 503 });
