@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import ClubPicker, { Crest } from "./ClubPicker";
 const COMPLIANCE = "A free prediction game for fun. Not betting. No money in, no money out.";
 const post = async (url, body) => {
   const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
@@ -9,7 +11,9 @@ const post = async (url, body) => {
 const since = (d) => (d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Nairobi" }) : "");
 
 export default function MemberPanel({ initial, available }) {
-  const [member, setMember] = useState(initial);
+  const router = useRouter();
+  const [member, setMemberRaw] = useState(initial);
+  const setMember = (m) => { setMemberRaw(m); router.refresh(); };
   const [code, setCode] = useState(null); // shown once, right after creating the account
   const [saved, setSaved] = useState(false);
   if (!available) return <div className="card"><p className="mini" style={{ margin: 0 }}>Accounts aren’t switched on for this deployment yet.</p></div>;
@@ -19,11 +23,11 @@ export default function MemberPanel({ initial, available }) {
     <div className="code-box" data-testid="recovery-code">{code}</div>
     <div className="row"><button className="btn" type="button" onClick={() => navigator.clipboard?.writeText(code)}>Copy code</button></div>
     <label className="check"><input type="checkbox" checked={saved} onChange={(e) => setSaved(e.target.checked)} /> I’ve saved my recovery code somewhere safe</label>
-    <button className="btn primary" type="button" disabled={!saved} onClick={() => setCode(null)}>Continue</button>
+    <button className="btn primary" type="button" disabled={!saved} onClick={() => { setCode(null); router.refresh(); }}>Continue</button>
   </div>;
   if (member) return <div className="card acct" data-testid="signed-in">
     <h2>@{member.handle}</h2>
-    <p className="mini">Member since {since(member.createdAt)}. Predictions and leaderboards are coming next.</p>
+    <p className="mini">Member since {since(member.createdAt)}. Predict scores on any match card, climb the <a href="/leaderboard">leaderboard</a> and build your <a href="/squad">fantasy XII</a>.</p>
     <p className="mini">Signing out on this device keeps your account. To sign back in you’ll need your handle and recovery code.</p>
     <SignOut onDone={() => setMember(null)} />
     <p className="mini comp">{COMPLIANCE}</p>
@@ -36,15 +40,21 @@ export default function MemberPanel({ initial, available }) {
 
 function Create({ onDone }) {
   const [handle, setHandle] = useState(""), [adult, setAdult] = useState(false), [err, setErr] = useState(""), [busy, setBusy] = useState(false);
+  const [club, setClub] = useState(null), [pick, setPick] = useState(false);
   const submit = async (e) => {
     e.preventDefault(); setErr(""); setBusy(true);
-    const r = await post("/api/member", { handle, confirm18: adult }); setBusy(false);
+    const r = await post("/api/member", { handle, confirm18: adult, favTeamId: club?.id ?? null }); setBusy(false);
     if (r.ok) onDone(r.member, r.recoveryCode); else setErr(r.error || "Something went wrong. Try again.");
   };
   return <form className="card acct" onSubmit={submit} data-testid="create">
     <h2>Create an account</h2>
     <label className="fld">Nickname<input name="handle" value={handle} onChange={(e) => setHandle(e.target.value)} placeholder="e.g. gor_mahia_fan" minLength={3} maxLength={20} pattern="[A-Za-z0-9_]{3,20}" autoComplete="nickname" required /></label>
     <p className="mini">3–20 letters, numbers or underscores. Shown on leaderboards, so don’t use your real name if you’d rather not.</p>
+    <div className="fld">Favourite club <span className="mini">(optional)</span>
+      <div className="fc-row">{club ? <><Crest src={club.crest} size={28} alt="" /><b>{club.short}</b></> : <span className="mini">None</span>}
+        <button type="button" className="btn sm" onClick={() => setPick(!pick)}>{pick ? "Close" : club ? "Change" : "Pick a club"}</button>
+        {club && <button type="button" className="linkbtn" onClick={() => setClub(null)}>Clear</button>}</div>
+      {pick && <ClubPicker value={club?.id} onPick={(c) => { setClub(c); setPick(false); }} />}</div>
     <label className="check"><input type="checkbox" name="confirm18" checked={adult} onChange={(e) => setAdult(e.target.checked)} required /> I confirm I am 18 or older</label>
     {err && <p className="err" role="alert">{err}</p>}
     <button className="btn primary" disabled={busy || !adult}>{busy ? "Creating…" : "Create account"}</button>

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { LEAGUES } from "../../lib/data";
 import { getOne } from "../../lib/all";
+import MembersList from "../../components/MembersList";
 import { MatchCard, LiveCard, ResultRow, Form, fmtDate } from "../../components/ui";
 // Render per request so live / upcoming / finished is judged against the current time (no build-time freeze).
 // Upstream data is cached for 2 min in lib/data.js, so this does not add API calls.
@@ -24,5 +25,6 @@ export default async function League({ params }) {
       <tbody>{d.standings.map((t, i) => <tr key={t.name}><td>{i + 1}</td><td><b>{t.short}</b></td><td className="n">{t.p}</td><td className="n">{t.w}</td><td className="n">{t.d}</td><td className="n">{t.l}</td><td className="n">{t.gf}</td><td className="n">{t.ga}</td><td className="n">{t.gd > 0 ? "+" : ""}{t.gd}</td><td className="n"><b>{t.pts}</b></td>
         <td className="mini">{t.home.w}-{t.home.d}-{t.home.l}</td><td className="mini">{t.away.w}-{t.away.d}-{t.away.l}</td><td><Form f={t.form} /></td></tr>)}</tbody></table></div></div>
       <div className="card sticky" style={{ alignSelf: "start" }}><h2 style={{ margin: "0 0 8px", fontSize: 18 }}>Latest results</h2>{d.recent.map((r, i) => <div className="res" key={i}><span>{r.home} v {r.away}<br /><span className="mini">{fmtDate(r.date)}</span></span><b>{r.hg}–{r.ag}</b></div>)}</div></section>
+    {process.env.DATABASE_URL && process.env.SESSION_SECRET ? <MembersList mode="sheet" /> : null}
   </>;
 }

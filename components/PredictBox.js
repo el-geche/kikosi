@@ -2,7 +2,7 @@
 // Score prediction inside a MatchCard. All boxes on a page share ONE batched GET /api/predictions (40 ms window).
 // Countdown to kickoff (EAT) that locks the form at zero; the server enforces the same lock with the database clock.
 import { useEffect, useState } from "react";
-import { countdownParts } from "../lib/live.js";
+import { countdownParts } from "../lib/countdown.js";
 const B = typeof window === "undefined" ? null : (window.__kikosiPb ??= { want: new Map(), timer: null, cache: new Map() });
 function load(id) {
   return new Promise((resolve) => {

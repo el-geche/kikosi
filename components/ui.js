@@ -2,10 +2,12 @@ export const pct = (x) => `${(x * 100).toFixed(0)}%`;
 export const fair = (p) => (p > 0 ? (1 / p).toFixed(2) : "–");
 export const fmtDate = (d) => new Date(d + "T12:00:00Z").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
 export function Form({ f }) { return <div className="form">{f.length ? f.map((r, i) => <span key={i} className={`f ${r}`}>{r}</span>) : <span className="mini">no games yet</span>}</div>; }
+import PredictBox from "./PredictBox";
+const GAME = () => !!process.env.DATABASE_URL && !!process.env.SESSION_SECRET;
 export function MatchCard({ m, i = 0 }) {
   const best = Math.max(m.H, m.D, m.A);
   return <article className="card hov" style={{ animationDelay: `${i * 40}ms` }}>
-    <div className="m-top"><span>{fmtDate(m.date)}{m.time ? ` · ${m.time}` : ""}</span><span>{m.round}</span></div>
+    <div className="m-top"><span>{fmtDate(m.date)}{m.time ? ` · ${m.time}` : ""}</span><span>{m.lg ? `${m.lg} · ` : ""}{m.round}</span></div>
     <div className="teams">
       <div className="team">{m.home}<Form f={m.homeForm} /></div>
       <div className="xg" title="Model expected goals">xG {m.lh.toFixed(1)}–{m.la.toFixed(1)}</div>
@@ -13,6 +15,7 @@ export function MatchCard({ m, i = 0 }) {
     </div>
     <div className="pbar"><span className="h" style={{ width: pct(m.H) }} /><span className="d" style={{ width: pct(m.D) }} /><span className="a" style={{ width: pct(m.A) }} /></div>
     <Markets m={m} />
+    {GAME() && m.fdId && m.ko ? <PredictBox matchId={m.fdId} koMs={m.ko} home={m.home} away={m.away} /> : null}
     <Compare m={m} />
     <details><summary>More match analysis</summary>
       <div className="kv">
