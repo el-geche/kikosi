@@ -12,7 +12,7 @@ export default async function League({ params }) {
   return <>
     <div className="hero"><h1>{d.league.flag} {d.league.name} <span className="grad">2026/27</span></h1>
       <p>Fixtures, side-by-side team histories and model probabilities. League averages: {d.hAvg.toFixed(2)} home goals and {d.aAvg.toFixed(2)} away goals per game.</p>
-      <div className="chips"><span className="chip"><b>{d.played}</b> results</span>{d.live.length > 0 && <span className="chip"><b>{d.live.length}</b> live now</span>}<span className="chip">Data refreshed every 2 min</span><span className="chip">Source: {d.source}</span></div></div>
+      <div className="chips"><span className="chip"><b>{d.played}</b> results</span>{d.live.length > 0 && <span className="chip"><b>{d.live.length}</b> live now</span>}<span className="chip">Data refreshed automatically</span><span className="chip">Source: {d.source}</span></div></div>
     <section id="live"><div className="sec-h"><div><h2>Live now</h2><p>Matches in progress, with the live score from the data feed. Live matches are not modelled.</p></div></div>
       {d.live.length ? <div className="grid">{d.live.map((m, i) => <LiveCard key={m.id} m={m} i={i} />)}</div> : <p className="mini">No {d.league.name} matches in progress right now.</p>}
       {d.pending.length > 0 && <p className="mini" style={{ marginTop: 8 }}>Awaiting final score from the feed: {d.pending.map((m) => `${m.home} v ${m.away} (${fmtDate(m.date)})`).join(", ")}.</p>}</section>

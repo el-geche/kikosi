@@ -13,7 +13,7 @@ function Item({ kind, d }) {
   if (kind === "comment") return <><M h={d.author} /> on <M h={d.target} />’s wall: “{d.body}”</>;
   if (kind === "exact") return <><M h={d.handle} /> called <b>{d.home} {String(d.pick).replace("-", "–")} {d.away}</b>{d.sameExact === 0 ? " (the only one!)" : ` (+${d.sameExact} others)`}</>;
   if (kind === "streak") return <><M h={d.handle} /> on a <b>{d.streak}</b>-match streak</>;
-  if (kind === "mover") return <><M h={d.handle} /> climbed <b>{d.move}</b> places{d.from ? ` (${d.from} → ${d.to})` : ` (new → ${d.to})`}</>;
+  if (kind === "mover") return <><M h={d.handle} /> climbed <b>{d.move}</b> {d.move === 1 ? "place" : "places"}{d.from ? ` (${d.from} → ${d.to})` : ` (new → ${d.to})`}</>;
   return null;
 }
 export async function generateMetadata({ params }) { return { title: `Recap ${params.week} · Kikosi` }; }
