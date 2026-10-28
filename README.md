@@ -38,7 +38,7 @@ Set up: `node scripts/migrate.mjs` (idempotent, applies `db/schema.sql`). Tests:
 ### Football-data scheduler (`lib/fdPlan.js` pure, `lib/fdScheduler.js` runtime)
 - Budget: 9 calls per rolling 60 s (the free tier allows 10). Shared across all instances through Postgres (`fd_acquire` takes an advisory lock, counts `fd_calls` in the last 60 s, checks the job lease and back-off, then records the call). One fetcher wins each job; the others read the cached copy.
 - Honours `X-Requests-Available-Minute` (stops when ≤1 left) and `X-RequestCounter-Reset`. On 429: back off for max(reset, 15 s × 2ⁿ, capped at 240 s); success resets it.
-- Leagues are staggered 12 s apart. Intervals: idle 15 min, upcoming (kick-off within 3 h or just finished) 5 min, live leagues share the leftover budget (≥15 s each). The light live call `/v4/matches?status=IN_PLAY,PAUSED&competitions=PL,PD,BL1,SA,FL1` runs every 20 s with two or more live leagues, otherwise every 60 s.
+- Leagues are staggered 12 s apart. Intervals: idle 15 min, upcoming (kick-off within 2 h) 5 min, live leagues share the leftover budget (≥15 s each). The light live call `/v4/matches?status=IN_PLAY,PAUSED&competitions=PL,PD,BL1,SA,FL1` runs every 20 s with two or more live leagues, otherwise every 60 s.
 - Priority when several jobs are due: live call, live leagues, upcoming, idle, on-demand.
 - The scheduler has no always-on worker (Hobby). `tick()` runs at most one due job and is triggered by page renders (`waitUntil`), SSE streams and polling endpoints, plus a daily cron safety net. `/api/fd/status` shows the plan, the budget window and calls per minute.
 
@@ -49,8 +49,8 @@ Set up: `node scripts/migrate.mjs` (idempotent, applies `db/schema.sql`). Tests:
 - Swapping to a hosted provider (Ably, Pusher, Supabase Realtime, Vercel-compatible websockets): keep `lib/events.js publish()` as the single write path and add a provider publish next to the insert. In `components/useRealtime.js`, replace the EventSource with the provider's subscribe for the same event names (`live`, `final`, `settled`, `comment`, `comment_removed`, `reaction`, `pin`). The cursor table stays as the replay log. Not done here: free only.
 
 ### Caching
-- Upstream football-data responses are kept in Postgres (`fd_cache`) and served stale-while-revalidate. Teams are kept 24 h and scorers 1 h.
-- Public GETs (`/api/leaderboard`, `/api/members`, `/api/live`, `/api/clubs`) send `Cache-Control: public, s-maxage=5–10, stale-while-revalidate` plus a weak ETag, and return 304 on `If-None-Match`. Anything personalised (with a member cookie) is `private, no-store`.
+- Upstream football-data responses are cached (Vercel Runtime Cache plus a Postgres copy) and served stale-while-revalidate: teams and squads 24 h, scorers 1 h, league feeds on the scheduler cadence above.
+- Public, non-personalised GETs send a weak ETag and a CDN `s-maxage`: `/api/leaderboard` and `/api/members` 8 s; `/api/clubs` and `/api/fantasy/players` 10 min with 1 h stale-while-revalidate. Personalised responses (`/api/live` with your live points, `/api/predictions`, `/api/member`) are `private, no-cache` with ETag/304 and are never CDN-cached.
 
 ### Privacy and moderation
 - Other members' picks are never returned before kick-off. Before kick-off, only an anonymous H/D/A split is shown, and only when there are ≥3 picks.
